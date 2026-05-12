@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoPub Scheduler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">A</div>
+      <div>
+        <h1>AutoPub Scheduler</h1>
+        <p>Planifie tes publications Facebook, Instagram et LinkedIn</p>
+      </div>
+    </div>
+    <button class="btn btn-primary">Tableau de bord</button>
+  </header>
+
+  <main class="container">
+    <section class="hero card">
+      <div class="hero-text">
+        <span class="badge">Application Web • Social Media Automation</span>
+        <h2>Publie automatiquement à la date et à l’heure que tu choisis</h2>
+        <p>
+          Connecte tes comptes, rédige ton contenu, choisis les plateformes
+          et programme la publication sans revenir manuellement à chaque fois.
+        </p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <strong id="scheduledCount">0</strong>
+          <span>Posts programmés</span>
+        </div>
+        <div class="stat">
+          <strong>3</strong>
+          <span>Plateformes</span>
+        </div>
+        <div class="stat">
+          <strong>24/7</strong>
+          <span>Automatisation</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <div class="section-head">
+          <h3>Connexions sociales</h3>
+          <p>Simulation frontend des connexions OAuth</p>
+        </div>
+
+        <div class="platform-list">
+          <div class="platform">
+            <div>
+              <h4>Facebook</h4>
+              <p>Pages Meta</p>
+            </div>
+            <button class="btn connect-btn" data-platform="facebook">Connecter</button>
+          </div>
+
+          <div class="platform">
+            <div>
+              <h4>Instagram</h4>
+              <p>Compte professionnel</p>
+            </div>
+            <button class="btn connect-btn" data-platform="instagram">Connecter</button>
+          </div>
+
+          <div class="platform">
+            <div>
+              <h4>LinkedIn</h4>
+              <p>Profil / page</p>
+            </div>
+            <button class="btn connect-btn" data-platform="linkedin">Connecter</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-head">
+          <h3>État des connexions</h3>
+          <p>Remplace ceci plus tard par les vrais tokens/API</p>
+        </div>
+
+        <div class="status-list">
+          <div class="status-item">
+            <span>Facebook</span>
+            <span id="facebookStatus" class="status off">Non connecté</span>
+          </div>
+          <div class="status-item">
+            <span>Instagram</span>
+            <span id="instagramStatus" class="status off">Non connecté</span>
+          </div>
+          <div class="status-item">
+            <span>LinkedIn</span>
+            <span id="linkedinStatus" class="status off">Non connecté</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h3>Programmer une publication</h3>
+        <p>Écris le message, choisis les réseaux, puis définis la date et l’heure</p>
+      </div>
+
+      <form id="scheduleForm" class="form-grid">
+        <div class="full">
+          <label for="content">Contenu de la publication</label>
+          <textarea id="content" rows="6" required></textarea>
+        </div>
+
+        <div>
+          <label for="mediaUrl">URL média (optionnel)</label>
+          <input type="url" id="mediaUrl"/>
+        </div>
+
+        <div>
+          <label for="campaignName">Nom de campagne</label>
+          <input type="text" id="campaignName"/>
+        </div>
+
+        <div class="full">
+          <label>Plateformes</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="platforms" value="facebook"/> Facebook</label>
+            <label><input type="checkbox" name="platforms" value="instagram"/> Instagram</label>
+            <label><input type="checkbox" name="platforms" value="linkedin"/> LinkedIn</label>
+          </div>
+        </div>
+
+        <div>
+          <label for="publishDate">Date</label>
+          <input type="date" id="publishDate" required/>
+        </div>
+
+        <div>
+          <label for="publishTime">Heure</label>
+          <input type="time" id="publishTime" required/>
+        </div>
+
+        <div class="full actions">
+          <button type="submit" class="btn btn-primary">Programmer</button>
+          <button type="button" id="clearBtn" class="btn btn-secondary">Vider</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h3>Publications programmées</h3>
+        <p>Liste locale de démonstration</p>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        Aucune publication programmée pour le moment.
+      </div>
+
+      <div id="postsList" class="posts-list"></div>
+    </section>
+  </main>
+
+  <template id="postTemplate">
+    <article class="post-card">
+      <div class="post-top">
+        <div>
+          <h4 class="post-title"></h4>
+          <p class="post-date"></p>
+        </div>
+        <span class="pill post-status">Planifié</span>
+      </div>
+
+      <p class="post-content"></p>
+
+      <div class="post-meta">
+        <div class="post-platforms"></div>
+        <div class="post-media"></div>
+      </div>
+
+      <div class="post-actions">
+        <button class="btn btn-secondary edit-btn">Modifier</button>
+        <button class="btn btn-danger delete-btn">Supprimer</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
